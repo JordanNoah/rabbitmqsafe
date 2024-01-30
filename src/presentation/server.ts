@@ -1,5 +1,7 @@
 import express, { Router } from 'express'
 import http from 'http'
+import { DbSequelize } from "../infrastructure/database/init";
+import {Rabbitmq} from "../infrastructure/eventBus/rabbitmq";
 
 interface Options {
     port?: number
@@ -12,19 +14,29 @@ export class Server {
     private readonly routes: Router
 
     constructor(options: Options){
-        const {port = 3000, routes} = options
+        const {port = 3030, routes} = options
         this.port = port
         this.routes = routes
     }
 
-    async start(){
-        this.app.use(express.json())
-        this.app.use(this.routes)
+    start(){
+        DbSequelize()
+            .then(async ()=> {
 
-        const server = http.createServer(this.app)
+                await Rabbitmq.init()
 
-        server.listen(this.port, async () => {
-            console.log(`Server running on PORT: ${this.port}`);
-        })
+                const server = http.createServer(this.app)
+
+                this.app.use(express.json())
+                this.app.use(this.routes)
+                this.app.use('/static/js',express.static("src/presentation/public/js"))
+
+                server.listen(this.port,() => {
+                    console.log(`Server running on PORT: ${this.port}`);
+                })
+
+            }).catch((err) => {
+                console.error(err.message)
+            })
     }
 }
