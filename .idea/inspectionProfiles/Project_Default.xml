@@ -4,17 +4,26 @@
     <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="10">
+          <list size="19">
             <item index="0" class="java.lang.String" itemvalue="nobr" />
             <item index="1" class="java.lang.String" itemvalue="noembed" />
             <item index="2" class="java.lang.String" itemvalue="comment" />
             <item index="3" class="java.lang.String" itemvalue="noscript" />
             <item index="4" class="java.lang.String" itemvalue="embed" />
             <item index="5" class="java.lang.String" itemvalue="script" />
-            <item index="6" class="java.lang.String" itemvalue="router-link" />
-            <item index="7" class="java.lang.String" itemvalue="router-view" />
-            <item index="8" class="java.lang.String" itemvalue="v-main" />
-            <item index="9" class="java.lang.String" itemvalue="v-app" />
+            <item index="6" class="java.lang.String" itemvalue="v-app" />
+            <item index="7" class="java.lang.String" itemvalue="v-main" />
+            <item index="8" class="java.lang.String" itemvalue="router-link" />
+            <item index="9" class="java.lang.String" itemvalue="router-view" />
+            <item index="10" class="java.lang.String" itemvalue="v-navigation-drawer" />
+            <item index="11" class="java.lang.String" itemvalue="v-list" />
+            <item index="12" class="java.lang.String" itemvalue="v-list-item" />
+            <item index="13" class="java.lang.String" itemvalue="v-list-item-icon" />
+            <item index="14" class="java.lang.String" itemvalue="v-icon" />
+            <item index="15" class="java.lang.String" itemvalue="v-list-item-content" />
+            <item index="16" class="java.lang.String" itemvalue="v-list-item-title" />
+            <item index="17" class="java.lang.String" itemvalue="v-btn" />
+            <item index="18" class="java.lang.String" itemvalue="v-spacer" />
           </list>
         </value>
       </option>

@@ -1,7 +1,6 @@
 import {RegisterSignatureDto, SignatureDatasource, SignatureEntity} from "../../domain";
 import {CustomError} from "../../domain/errors/custom.error";
 import {SequelizeSignature} from "../database/models/Signatures";
-import {sequelize} from "../database/sequelize";
 
 export class SignatureDatasourceImpl implements SignatureDatasource{
     async register(registerSignatureDto: RegisterSignatureDto): Promise<SignatureEntity> {

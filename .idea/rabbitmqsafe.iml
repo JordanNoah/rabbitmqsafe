@@ -12,5 +12,9 @@
     <orderEntry type="library" name="vuetify" level="application" />
     <orderEntry type="library" name="vue" level="application" />
     <orderEntry type="library" name="vue-router" level="application" />
+    <orderEntry type="library" name="@mdi/font" level="application" />
+    <orderEntry type="library" name="vuetify" level="application" />
+    <orderEntry type="library" name="vue" level="application" />
+    <orderEntry type="library" name="vue-router" level="application" />
   </component>
 </module>

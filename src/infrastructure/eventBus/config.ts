@@ -1,5 +1,9 @@
 import { ServerProperties, Options } from "amqplib";
 import AppConfig from "../../domain/config"
+import {SequelizeSignature} from "../database/models/Signatures";
+import {SignatureRepository} from "../../domain";
+import {SignatureRepositoryImpl} from "../repositories/signature.repository.impl";
+import {SignatureDatasourceImpl} from "../datasource/signature.datasource.impl";
 
 export const config: Options.Connect = {
     username: AppConfig.RABBIT_USERNAME,
@@ -19,4 +23,6 @@ export const assertExchange: Options.AssertExchange = {
     durable: true
 }
 
-export const eventList: Map<string, (payload: any) => Promise<void>> = new Map([])
+export const eventList = async () => {
+    return await new SignatureDatasourceImpl().getAll();
+}

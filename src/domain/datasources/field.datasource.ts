@@ -1,0 +1,6 @@
+import {FieldsRabbitEventDto} from "../dtos/rabbit-event/fields-rabbit-event.dto";
+import {FieldsEntity} from "../entities/fields.entity";
+
+export abstract class FieldDatasource {
+    abstract register(fieldsRabbitEventDto: FieldsRabbitEventDto): Promise<FieldsEntity>
+}
