@@ -6,8 +6,35 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 </head>
 <body>
-    prueba
+    <div id="app">
+        <v-app>
+            <v-main>
+                <h1>Hello App!</h1>
+                <p>
+                    <!-- use router-link component for navigation. -->
+                    <!-- specify the link by passing the `to` prop. -->
+                    <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
+                    <router-link to="/foo">Go to Foo</router-link>
+                    <router-link to="/bar">Go to Bar</router-link>
+                </p>
+                <!-- route outlet -->
+                <!-- component matched by the route will render here -->
+                <router-view></router-view>
+            </v-main>
+        </v-app>
+    </div>
 </body>
+<footer>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+    <script src="./static/js/views.js"></script>
+    <script src="./static/js/components.js"></script>
+    <script src="./static/js/main.js"></script>
+</footer>
 </html>

@@ -49,4 +49,12 @@ export class SignatureController {
             res.status(500).json(error)
         })
     }
+
+    getByUuid = (req: Request, res: Response) => {
+        this.signatureRepository.getByUuid(req.params.uuid).then((signature) => {
+            res.json(signature)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
 }

@@ -12,7 +12,7 @@ export class SignatureRoutes {
         const controller = new SignatureController(signatureRepository);
         router.get('/', controller.getAll)
         router.get('/id/:id', controller.getById)
-        router.get('/uuid/:uuid', controller.)
+        router.get('/uuid/:uuid', controller.getByUuid)
         router.post('/save', controller.createSignature)
         router.delete('/id/:id', controller.deleteById)
         router.put('/',controller.update)
