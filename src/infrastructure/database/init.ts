@@ -4,14 +4,15 @@ import {SequelizeProperty} from "./models/Properties";
 import {SequelizeSignature} from "./models/Signatures";
 
 export const DbSequelize = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        SequelizeField.sync().catch((err) => {reject()})
-        SequelizeEvent.sync().catch((err) => {reject()})
-        SequelizeProperty.sync().catch((err) => {reject()})
-        SequelizeSignature.sync().catch((err) => {reject()})
+    return new Promise( async (resolve, reject) => {
+        await SequelizeField.sync({force:true}).catch((err) => {reject()})
+        await SequelizeEvent.sync({force:true}).catch((err) => {reject()})
+        await SequelizeProperty.sync({force:true}).catch((err) => {reject()})
+        await SequelizeSignature.sync({force:true}).catch((err) => {reject()})
 
-        SequelizeEvent.belongsTo(SequelizeField, {foreignKey: 'fieldsId', as: 'field'});
-        SequelizeEvent.belongsTo(SequelizeProperty, { foreignKey: 'propertiesId', as: 'property' });
+
+        SequelizeEvent.hasOne(SequelizeField, {as: 'field'});
+        SequelizeEvent.hasOne(SequelizeProperty, {as: 'property'});
         resolve();
     })
 }

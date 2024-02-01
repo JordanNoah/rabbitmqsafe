@@ -15,6 +15,10 @@ export class ReceivedRabbitEventDto{
             content
         } = object
 
+        if (!fields) return ['Missing fields structure',undefined]
+        if (!properties) return ['Missing properties structure',undefined]
+        if (!content) return ['Missing content structure',undefined]
+
         return[
             undefined,
             new ReceivedRabbitEventDto(
