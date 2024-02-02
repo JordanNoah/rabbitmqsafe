@@ -43,6 +43,6 @@ export class Rabbitmq {
     public static async init() {
         await this.connection()
         await this.setQueue()
-        //await this.consume()
+        await this.consume()
     }
 }

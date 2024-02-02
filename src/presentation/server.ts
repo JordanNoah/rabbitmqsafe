@@ -27,19 +27,9 @@ export class Server {
         DbSequelize()
             .then(async ()=> {
 
-                await Rabbitmq.init()
+                //await Rabbitmq.init()
 
                 const server = http.createServer(this.app)
-
-
-                await SequelizeField.sync({force:true})
-                await SequelizeProperty.sync({force:true})
-                await SequelizeEvent.sync({force:true})
-                await SequelizeSignature.sync({force:true})
-
-
-                SequelizeField.belongsTo(SequelizeEvent, { as: 'event', foreignKey: 'eventId' });
-                SequelizeProperty.belongsTo(SequelizeEvent, { as: 'event', foreignKey: 'eventId' });
 
                 this.app.use(express.json())
                 this.app.use(this.routes)
@@ -50,7 +40,7 @@ export class Server {
                 })
 
             }).catch((err) => {
-                console.error(err.message)
+                console.error(err)
             })
     }
 }
