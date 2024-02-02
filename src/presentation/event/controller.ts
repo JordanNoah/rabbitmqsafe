@@ -15,4 +15,12 @@ export class EventController {
             res.status(500).json(error)
         })
     }
+
+    getById = (req: Request, res: Response) => {
+        this.eventRepository.getById(Number(req.params.id)).then((event) => {
+            res.json(event)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
 }

@@ -8,4 +8,5 @@ export abstract class SignatureDatasource {
     abstract deleteById(id: number): Promise<SignatureEntity>
     abstract update(registerSignatureDto: RegisterSignatureDto): Promise<SignatureEntity | null>
     abstract getByUuid(uuid: string): Promise<SignatureEntity|null>
+    abstract existSignature(signature: string): Promise<boolean>
 }

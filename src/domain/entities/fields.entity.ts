@@ -1,11 +1,11 @@
 export class FieldsEntity {
     constructor(
         public id: number,
-        public consumerTag: string,
-        public deliveryTag: string,
+        public consumerTag: string | null,
+        public deliveryTag: string | null,
         public redelivered: boolean,
-        public exchange: string,
-        public routingKey: string,
+        public exchange: string | null,
+        public routingKey: string | null,
         public createdAt: Date,
         public updatedAt: Date
     ) {}

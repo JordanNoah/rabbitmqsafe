@@ -3,4 +3,5 @@ import {EventEntity} from "../entities/event.entity";
 
 export abstract class EventDatasource {
     abstract register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity>
+    abstract getById(id: number): Promise<EventEntity|null>
 }

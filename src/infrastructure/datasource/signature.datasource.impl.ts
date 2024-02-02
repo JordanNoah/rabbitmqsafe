@@ -2,7 +2,7 @@ import {RegisterSignatureDto, SignatureDatasource, SignatureEntity} from "../../
 import {CustomError} from "../../domain/errors/custom.error";
 import {SequelizeSignature} from "../database/models/Signatures";
 
-export class SignatureDatasourceImpl implements SignatureDatasource{
+export class SignatureDatasourceImpl implements SignatureDatasource {
     async register(registerSignatureDto: RegisterSignatureDto): Promise<SignatureEntity> {
         try {
             const { uuid , name} = registerSignatureDto
@@ -110,4 +110,21 @@ export class SignatureDatasourceImpl implements SignatureDatasource{
             throw CustomError.internalSever()
         }
     }
+
+    async existSignature(signature: string): Promise<boolean> {
+        try {
+            const signatureDb = await SequelizeSignature.findOne({
+                where:{
+                    name:signature
+                }
+            })
+            return !!signatureDb
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
+
 }

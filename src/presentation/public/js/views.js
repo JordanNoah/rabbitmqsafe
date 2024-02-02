@@ -1,5 +1,3 @@
-const Foo = {
-    template: `
-        <div></div>
-    `
+const dashboard = {
+    template: ``
 }

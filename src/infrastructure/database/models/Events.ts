@@ -6,6 +6,8 @@ import { SequelizeProperty } from "./Properties";
 interface EventsRow {
     id: number,
     content?: string,
+    fieldId: number,
+    propertyId: number,
     createdAt?: Date,
     updatedAt?: Date
 }
@@ -13,6 +15,8 @@ interface EventsRow {
 export class SequelizeEvent extends Model<EventsRow, Omit<EventsRow, 'id'>> {
     declare id: number
     declare content: string | null
+    declare fieldId: number
+    declare propertyId: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
 }
@@ -26,6 +30,14 @@ SequelizeEvent.init({
     content:{
         type:DataTypes.TEXT,
         allowNull:true
+    },
+    fieldId:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+    },
+    propertyId:{
+        type:DataTypes.INTEGER,
+        allowNull:false
     }
 },{
     sequelize,

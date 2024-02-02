@@ -4,9 +4,8 @@ Vue.component(
         data: function () {
             return {
                 items: [
-                    { title: 'Home', icon: 'mdi-home-city' },
-                    { title: 'My Account', icon: 'mdi-account' },
-                    { title: 'Users', icon: 'mdi-account-group-outline' },
+                    { title: 'My Account', icon: 'mdi-table-arrow-down' },
+                    { title: 'Users', icon: 'mdi-rabbit' },
                 ]
             }
         },

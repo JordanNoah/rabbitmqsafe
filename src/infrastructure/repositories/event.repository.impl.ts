@@ -8,4 +8,8 @@ export class EventRepositoryImpl implements EventRepository{
     register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity> {
         return this.eventDatasource.register(receivedRabbitEventDto)
     }
+
+    getById(id: number): Promise<EventEntity | null> {
+        return this.eventDatasource.getById(id)
+    }
 }

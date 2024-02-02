@@ -15,10 +15,6 @@ export class ReceivedRabbitEventDto{
             content
         } = object
 
-        console.log(fields)
-        console.log(properties)
-        console.log("content",content)
-
         if (!fields) return ['Missing fields structure',undefined]
         if (!properties) return ['Missing properties structure',undefined]
 

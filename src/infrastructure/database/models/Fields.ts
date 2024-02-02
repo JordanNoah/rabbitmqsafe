@@ -4,8 +4,8 @@ import { sequelize } from "../sequelize";
 interface FieldRow {
     id: number,
     consumerTag?: string,
-    deliveryTag?: number,
-    redelivered?: Boolean,
+    deliveryTag?: string,
+    redelivered?: boolean,
     exchange?: string,
     routingKey?: string,
     createdAt?: Date,
@@ -15,12 +15,12 @@ interface FieldRow {
 export class SequelizeField extends Model<FieldRow, Omit<FieldRow, 'id'>> {
     declare id: number
     declare consumerTag: string | null
-    declare deliveryTag: number | null
-    declare redelivered: Boolean
+    declare deliveryTag: string | null
+    declare redelivered: boolean
     declare exchange: string | null
     declare routingKey: string | null
-    declare readonly createdAt?: Date
-    declare readonly updatedAt?: Date
+    declare readonly createdAt: Date
+    declare readonly updatedAt: Date
 }
 
 SequelizeField.init({

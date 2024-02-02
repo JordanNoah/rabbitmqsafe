@@ -4,9 +4,9 @@ import {FieldsEntity} from "./fields.entity";
 export class EventEntity {
     constructor(
         public id: number,
-        public property: PropertiesEntity,
-        public field: FieldsEntity,
-        public content: string,
+        public fieldId: number,
+        public propertyId: number,
+        public content: string | null,
         public createdAt: Date,
         public updatedAt: Date
     ) {}

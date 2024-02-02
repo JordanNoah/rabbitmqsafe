@@ -37,8 +37,8 @@ export class SequelizeProperty extends Model<PropertyRow,Omit<PropertyRow, 'id'>
     declare userId: string | null
     declare appId: string | null
     declare clusterId: string | null
-    declare readonly createdAt?: Date
-    declare readonly updatedAt?: Date
+    declare readonly createdAt: Date
+    declare readonly updatedAt: Date
 }
 
 SequelizeProperty.init({

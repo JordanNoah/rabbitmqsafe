@@ -12,6 +12,8 @@ export class EventRoutes {
 
         const controller = new EventController(eventRepository)
         router.post('/save', controller.createEvent)
+        router.get('/id/:id', controller.getById)
+
         return router;
     }
 }
