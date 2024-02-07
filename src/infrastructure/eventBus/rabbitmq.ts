@@ -1,6 +1,11 @@
 import { Connection, Channel, connect, ConsumeMessage } from "amqplib"
 import { config, assertQueue, assertExchange ,eventList } from "./config"
 import AppConfig from "../../domain/config";
+import {ReceivedRabbitEventDto} from "../../domain";
+import {throws} from "node:assert";
+import {CustomError} from "../../domain/errors/custom.error";
+import {EventDatasourceImpl} from "../datasource/event.datasource.impl";
+import {EventRepositoryImpl} from "../repositories/event.repository.impl";
 
 export class Rabbitmq {
 
@@ -35,7 +40,24 @@ export class Rabbitmq {
         await this._channel.consume(
             AppConfig.RABBIT_QUEUE,
             async (msg) => {
-                console.log(msg)
+                try {
+
+                    const datasource = new EventDatasourceImpl()
+                    const eventRepository = new EventRepositoryImpl(datasource)
+
+                    const [error, receivedRabbitEventDto] = ReceivedRabbitEventDto.create(msg!)
+                    if (error) throw CustomError.internalSever('error')
+                    eventRepository.register(receivedRabbitEventDto!).then((event)=> {
+                        console.log("Event consumed")
+                    }).catch((error) => {
+                        console.log("Event ignored")
+                    })
+                }catch (error){
+                    if (error instanceof CustomError){
+                        throw error;
+                    }
+                    throw CustomError.internalSever()
+                }
             }
         )
     }
@@ -43,6 +65,6 @@ export class Rabbitmq {
     public static async init() {
         await this.connection()
         await this.setQueue()
-        await this.consume()
+        //await this.consume()
     }
 }

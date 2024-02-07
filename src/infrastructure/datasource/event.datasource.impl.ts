@@ -62,4 +62,26 @@ export class EventDatasourceImpl implements EventDatasource {
             throw CustomError.internalSever()
         }
     }
+
+    async getAll(): Promise<EventEntity[]> {
+        try {
+            return await SequelizeEvent.findAll({
+                include:[
+                    {
+                        model:SequelizeField,
+                        as:'field'
+                    },
+                    {
+                        model:SequelizeProperty,
+                        as:'property'
+                    }
+                ]
+            })
+        }catch (error) {
+            if (error instanceof CustomError){
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
 }

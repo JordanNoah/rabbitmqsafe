@@ -28,5 +28,19 @@ export class SignatureRepositoryImpl implements SignatureRepository {
         return this.signatureDatasource.getByUuid(uuid)
     }
 
+    deleteByUuid(uuid: string): Promise<SignatureEntity> {
+        return this.signatureDatasource.deleteByUuid(uuid)
+    }
 
+    existSignature(signature: string): Promise<boolean> {
+        return this.signatureDatasource.existSignature(signature)
+    }
+
+    setOnSignature(uuid: string): Promise<SignatureEntity> {
+        return this.signatureDatasource.setOnSignature(uuid)
+    }
+
+    setOffSignature(uuid: string): Promise<SignatureEntity> {
+        return this.signatureDatasource.setOffSignature(uuid)
+    }
 }

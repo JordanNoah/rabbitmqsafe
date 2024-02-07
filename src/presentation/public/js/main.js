@@ -1,7 +1,7 @@
 const routes = [
     {
-        path: '/foo',
-        component: Foo
+        path: '/dashboard',
+        component: dashboard
     }
 ]
 

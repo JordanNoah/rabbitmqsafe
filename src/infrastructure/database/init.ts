@@ -10,7 +10,7 @@ export const DbSequelize = (): Promise<void> => {
         SequelizeEvent.belongsTo(SequelizeField,{as:'field'});
         SequelizeEvent.belongsTo(SequelizeProperty,{as:'property'});
 
-        sequelize.sync({force:true}).then(() => {
+        sequelize.sync({force:false}).then(() => {
             resolve();
         }).catch((err)=> {
             console.log(err)

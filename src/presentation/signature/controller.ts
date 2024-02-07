@@ -39,6 +39,13 @@ export class SignatureController {
         })
     }
 
+    deleteByUuid = (req: Request, res: Response) => {
+        this.signatureRepository.deleteByUuid(req.params.uuid).then((signature) => {
+            res.json(signature)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
     update = (req: Request, res: Response) => {
         const [error, registerSignatureDto] = RegisterSignatureDto.create(req.body)
         if (error) return res.status(400).json({error})
@@ -52,6 +59,22 @@ export class SignatureController {
 
     getByUuid = (req: Request, res: Response) => {
         this.signatureRepository.getByUuid(req.params.uuid).then((signature) => {
+            res.json(signature)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
+
+    setOnSignature = (req: Request, res: Response) => {
+        this.signatureRepository.setOnSignature(req.params.uuid).then((signature) => {
+            res.json(signature)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
+
+    setOffSignature = (req: Request, res: Response) => {
+        this.signatureRepository.setOffSignature(req.params.uuid).then((signature) => {
             res.json(signature)
         }).catch((error) => {
             res.status(500).json(error)

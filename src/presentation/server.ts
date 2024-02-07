@@ -27,7 +27,7 @@ export class Server {
         DbSequelize()
             .then(async ()=> {
 
-                //await Rabbitmq.init()
+                await Rabbitmq.init()
 
                 const server = http.createServer(this.app)
 

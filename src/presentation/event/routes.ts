@@ -13,7 +13,7 @@ export class EventRoutes {
         const controller = new EventController(eventRepository)
         router.post('/save', controller.createEvent)
         router.get('/id/:id', controller.getById)
-
+        router.get('/', controller.getAll)
         return router;
     }
 }

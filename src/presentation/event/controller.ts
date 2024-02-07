@@ -23,4 +23,12 @@ export class EventController {
             res.status(500).json(error)
         })
     }
+
+    getAll = (req: Request, res: Response) => {
+        this.eventRepository.getAll().then((events) => {
+            res.json(events)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
 }

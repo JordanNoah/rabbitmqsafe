@@ -13,7 +13,8 @@ export class SignatureDatasourceImpl implements SignatureDatasource {
                 },
                 defaults: {
                     name: name,
-                    uuid: uuid
+                    uuid: uuid,
+                    active: true
                 }
             });
 
@@ -115,7 +116,8 @@ export class SignatureDatasourceImpl implements SignatureDatasource {
         try {
             const signatureDb = await SequelizeSignature.findOne({
                 where:{
-                    name:signature
+                    name:signature,
+                    active:true
                 }
             })
             return !!signatureDb
@@ -127,4 +129,77 @@ export class SignatureDatasourceImpl implements SignatureDatasource {
         }
     }
 
+    async deleteByUuid(uuid: string): Promise<SignatureEntity> {
+        try {
+            const signature = await this.getByUuid(uuid)
+
+            if(!signature) throw CustomError.notFound('Signature not found')
+
+            await SequelizeSignature.destroy({
+                where:{
+                    uuid:uuid
+                }
+            })
+            return signature
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
+
+    async setOnSignature(uuid: string): Promise<SignatureEntity> {
+        try {
+            const signature = await this.getByUuid(uuid)
+
+            if(!signature) throw CustomError.notFound('Signature not found')
+
+            await SequelizeSignature.update(
+                {
+                    active:true
+                },
+                {
+                    where:{
+                        uuid:uuid
+                    }
+                }
+            )
+
+            signature.active = true
+            return signature
+        }catch (error){
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
+
+    async setOffSignature(uuid: string): Promise<SignatureEntity> {
+        try {
+            const signature = await this.getByUuid(uuid)
+
+            if(!signature) throw CustomError.notFound('Signature not found')
+
+            await SequelizeSignature.update(
+                {
+                    active:false
+                },
+                {
+                    where:{
+                        uuid:uuid
+                    }
+                }
+            )
+
+            signature.active = false
+            return signature
+        }catch (error){
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
 }

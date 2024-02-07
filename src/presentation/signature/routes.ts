@@ -14,8 +14,11 @@ export class SignatureRoutes {
         router.get('/id/:id', controller.getById)
         router.get('/uuid/:uuid', controller.getByUuid)
         router.post('/save', controller.createSignature)
+        router.delete('/uuid/:uuid', controller.deleteByUuid)
         router.delete('/id/:id', controller.deleteById)
         router.put('/',controller.update)
+        router.put('/off/uuid/:uuid',controller.setOffSignature)
+        router.put('/on/uuid/:uuid',controller.setOnSignature)
         return router;
     }
 }
