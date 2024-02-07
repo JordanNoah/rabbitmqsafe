@@ -123,15 +123,58 @@ Vue.component(
     {
         data: function () {
             return {
-
+                filters:[
+                    {
+                        name: 'Id',
+                        key: 'id'
+                    },
+                    {
+                        name: 'Signature',
+                        key: 'signature'
+                    },
+                    {
+                        name: 'Content',
+                        key: 'content'
+                    },
+                    {
+                        name: 'Timestamp',
+                        key: 'timestamp'
+                    }
+                ],
+                selectedFilter:null,
+                appliedFilters:[],
+                textFilter:null
             }
+        },
+        methods:{
+          setFilter(){
+              const objectFilter = {
+                  uuid: crypto.randomUUID(),
+                  filter: this.selectedFilter,
+                  text: this.textFilter
+              }
+              this.appliedFilters.push(objectFilter)
+          }
         },
         template:`
           <v-card outlined>
             <v-card-title>
               Buscador
-
             </v-card-title>
+            <v-card-text>
+              <div>
+                <div v-for="i in appliedFilters" :key="i.uuid">
+                  {{i.filter.name}}: {{i.text}}
+                </div>
+              </div>
+              <div class="d-flex">
+                <v-select v-model="selectedFilter" dense :items="filters" item-text="name" item-value="key" label="Filtro" return-object></v-select>
+                <v-text-field label="Texto a buscar" dense v-model="textFilter"></v-text-field>
+                <v-btn @click="setFilter()">
+                  Añadir Filtro
+                </v-btn>
+              </div>
+            </v-card-text>
           </v-card>
         `
     }
