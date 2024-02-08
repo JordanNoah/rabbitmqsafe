@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import {EventRepository, ReceivedRabbitEventDto} from "../../domain";
+import {TableDto} from "../../domain/dtos/client/table.dto";
 
 export class EventController {
     constructor(
@@ -26,6 +27,16 @@ export class EventController {
 
     getAll = (req: Request, res: Response) => {
         this.eventRepository.getAll().then((events) => {
+            res.json(events)
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+    }
+
+    getLimited = (req: Request, res: Response) => {
+        const [error, tableDto] = TableDto.create(req.body)
+        if (error) return res.status(400).json({error})
+        this.eventRepository.getLimited(tableDto!).then((events) => {
             res.json(events)
         }).catch((error) => {
             res.status(500).json(error)

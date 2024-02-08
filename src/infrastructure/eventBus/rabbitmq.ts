@@ -34,6 +34,7 @@ export class Rabbitmq {
             AppConfig.RABBIT_EXCHANGE,
             AppConfig.RABBIT_ROUTING_KEY
         )
+        await this._channel.prefetch(20);
     }
 
     public static async consume(){
@@ -49,7 +50,9 @@ export class Rabbitmq {
                     if (error) throw CustomError.internalSever('error')
                     eventRepository.register(receivedRabbitEventDto!).then((event)=> {
                         console.log("Event consumed")
+                        this._channel.ack(msg!);
                     }).catch((error) => {
+                        console.log(error)
                         console.log("Event ignored")
                     })
                 }catch (error){
@@ -65,6 +68,6 @@ export class Rabbitmq {
     public static async init() {
         await this.connection()
         await this.setQueue()
-        //await this.consume()
+        await this.consume()
     }
 }

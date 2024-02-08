@@ -172,12 +172,35 @@ Vue.component(
             deleteFilter(filter) {
               let index = this.appliedFilters.findIndex(e => e.uuid === filter.uuid)
                 this.appliedFilters.splice(index,1)
-                let indexDefaultFilter
+                let indexDefaultFilter = this.defaultFilters.findIndex(e => e.key === filter.filter.key)
+                this.filters.splice(indexDefaultFilter,0,filter.filter)
+                this.defaultSelectFilter()
+                this.reorderFilterArray()
+            },
+            compareFiltersArrays(objA,objB){
+              let indexA = this.defaultFilters.findIndex(e => e.key === objA.key);
+              let indexB = this.defaultFilters.findIndex(e => e.key === objB.key);
+
+              return indexA - indexB
+            },
+            reorderFilterArray(){
+              this.filters.sort(this.compareFiltersArrays)
+            },
+            findByFilter(){
+
+            }
+        },
+        watch:{
+            appliedFilters:{
+                handler(value){
+                    console.log(value)
+                },
+                deep:true
             }
         },
         mounted: function (){
+            this.filters = [...this.defaultFilters]
             this.defaultSelectFilter()
-            this.filters = this.defaultFilters
         },
         template:`
           <v-card outlined>
@@ -186,7 +209,7 @@ Vue.component(
             </v-card-title>
             <v-card-text>
               <v-row>
-                <v-col>
+                <v-col v-if="appliedFilters.length > 0">
                   <div v-for="i in appliedFilters" :key="i.uuid" class="d-flex justify-space-between">
                     <span>
                         {{i.filter.name}}: {{i.text}}
@@ -197,6 +220,9 @@ Vue.component(
                       </v-icon>
                     </v-btn>
                   </div>
+                </v-col>
+                <v-col v-else>
+                  Filtros no seleccionados
                 </v-col>
               </v-row>
               <v-row>

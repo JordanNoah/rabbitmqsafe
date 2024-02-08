@@ -12,7 +12,7 @@ const dashboard = {
             </v-row>
           </v-container>
           <v-card outlined>
-            <v-data-table :headers="headers" :items="items">
+            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="titleItems">
               <template v-slot:item.content="{item}">
                 <span style="margin: 10px 0; display: -webkit-box; max-width: 250px; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                   {{item.content}}
@@ -63,17 +63,29 @@ const dashboard = {
                     value:'action'
                 },
             ],
-            items:[]
+            items:[],
+            titleItems:0,
+            options:{}
         }
     },
-    mounted: function () {
-        this.getEvents()
+    watch:{
+        options:{
+            handler(){
+                this.getEvents()
+            },
+            deep: true
+        },
     },
     methods:{
         getEvents(){
-            axios.get("./api/event/").then((res) => {
+            const objPage = {
+                page: this.options.page,
+                limit: this.options.itemsPerPage
+            }
+            axios.post("./api/event/limited",objPage).then((res) => {
                 console.log(res.data)
-                this.items = res.data
+                this.items = res.data.events
+                this.titleItems = res.data.totalEvents
             }).catch((err) => {
                 console.log(err)
             })

@@ -12,4 +12,5 @@ export abstract class SignatureDatasource {
     abstract existSignature(signature: string): Promise<boolean>
     abstract setOffSignature(uuid: string): Promise<SignatureEntity>
     abstract setOnSignature(uuid: string): Promise<SignatureEntity>
+    abstract totalSignatures(): Promise<number>
 }

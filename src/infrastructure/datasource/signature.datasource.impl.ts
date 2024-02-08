@@ -202,4 +202,15 @@ export class SignatureDatasourceImpl implements SignatureDatasource {
             throw CustomError.internalSever()
         }
     }
+
+    async totalSignatures(): Promise<number> {
+        try {
+            return await SequelizeSignature.count()
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
 }

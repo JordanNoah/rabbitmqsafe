@@ -1,4 +1,6 @@
 import {EventDatasource, EventEntity, EventRepository, ReceivedRabbitEventDto} from "../../domain";
+import {TableDto} from "../../domain/dtos/client/table.dto";
+import {TableEventEntity} from "../../domain/entities/table-event.entity";
 
 export class EventRepositoryImpl implements EventRepository{
     constructor(
@@ -15,5 +17,9 @@ export class EventRepositoryImpl implements EventRepository{
 
     getAll(): Promise<EventEntity[]> {
         return this.eventDatasource.getAll()
+    }
+
+    getLimited(tableDto: TableDto): Promise<TableEventEntity> {
+        return this.eventDatasource.getLimited(tableDto)
     }
 }

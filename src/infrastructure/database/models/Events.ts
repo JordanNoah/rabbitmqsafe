@@ -28,7 +28,7 @@ SequelizeEvent.init({
         primaryKey: true
     },
     content:{
-        type:DataTypes.TEXT,
+        type:DataTypes.TEXT('long'),
         allowNull:true
     },
     fieldId:{

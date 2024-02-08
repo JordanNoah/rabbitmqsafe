@@ -7,6 +7,8 @@ import {sequelize} from "../database/sequelize";
 import {FieldDatasourceImpl} from "./field.datasource.impl";
 import {PropertyDatasourceImpl} from "./property.datasource.impl";
 import {SignatureDatasourceImpl} from "./signature.datasource.impl";
+import {TableDto} from "../../domain/dtos/client/table.dto";
+import {TableEventEntity} from "../../domain/entities/table-event.entity";
 
 export class EventDatasourceImpl implements EventDatasource {
     async register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity> {
@@ -14,9 +16,14 @@ export class EventDatasourceImpl implements EventDatasource {
 
             const { fields, content, properties } = receivedRabbitEventDto
 
-            const allowedSignature = await new SignatureDatasourceImpl().existSignature(properties.type)
+            const signatureDatasourceImpl = new SignatureDatasourceImpl()
 
-            if(!allowedSignature) throw CustomError.badRequest('Signature not allowed')
+            const totalSignatures = await signatureDatasourceImpl.totalSignatures()
+
+            if(totalSignatures > 0){
+                const allowedSignature = await signatureDatasourceImpl.existSignature(properties.type)
+                if(!allowedSignature) throw CustomError.badRequest('Signature not allowed')
+            }
 
             const field = await new FieldDatasourceImpl().register(fields)
 
@@ -34,6 +41,7 @@ export class EventDatasourceImpl implements EventDatasource {
 
             return eventEntity
         }catch (error) {
+            console.log(error)
             if (error instanceof CustomError){
                 throw error;
             }
@@ -78,6 +86,35 @@ export class EventDatasourceImpl implements EventDatasource {
                 ]
             })
         }catch (error) {
+            if (error instanceof CustomError){
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
+
+    async getLimited(tableDto: TableDto): Promise<TableEventEntity> {
+        try {
+            const { count ,rows} = await SequelizeEvent.findAndCountAll({
+                include:[
+                    {
+                        model:SequelizeField,
+                        as:'field'
+                    },
+                    {
+                        model:SequelizeProperty,
+                        as:'property'
+                    }
+                ],
+                limit:tableDto.limit,
+                offset:tableDto.page * tableDto.limit
+            })
+
+            return new TableEventEntity(
+                count,
+                rows
+            )
+        }catch (error){
             if (error instanceof CustomError){
                 throw error;
             }
