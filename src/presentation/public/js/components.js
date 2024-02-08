@@ -123,7 +123,7 @@ Vue.component(
     {
         data: function () {
             return {
-                filters:[
+                defaultFilters:[
                     {
                         name: 'Id',
                         key: 'id'
@@ -141,9 +141,11 @@ Vue.component(
                         key: 'timestamp'
                     }
                 ],
+                filters:[],
                 selectedFilter:null,
                 appliedFilters:[],
-                textFilter:null
+                textFilter:null,
+                disableAddFilter:false
             }
         },
         methods:{
@@ -154,7 +156,28 @@ Vue.component(
                   text: this.textFilter
               }
               this.appliedFilters.push(objectFilter)
-          }
+              const index = this.filters.findIndex(e => e.key === this.selectedFilter.key)
+              this.filters.splice(index,1)
+              this.textFilter = null
+              this.defaultSelectFilter()
+          },
+            defaultSelectFilter() {
+              if (this.filters.length === 0){
+                  this.disableAddFilter = true
+              } else {
+                  this.disableAddFilter = false
+                  this.selectedFilter = this.filters[0]
+              }
+            },
+            deleteFilter(filter) {
+              let index = this.appliedFilters.findIndex(e => e.uuid === filter.uuid)
+                this.appliedFilters.splice(index,1)
+                let indexDefaultFilter
+            }
+        },
+        mounted: function (){
+            this.defaultSelectFilter()
+            this.filters = this.defaultFilters
         },
         template:`
           <v-card outlined>
@@ -162,18 +185,28 @@ Vue.component(
               Buscador
             </v-card-title>
             <v-card-text>
-              <div>
-                <div v-for="i in appliedFilters" :key="i.uuid">
-                  {{i.filter.name}}: {{i.text}}
-                </div>
-              </div>
-              <div class="d-flex">
-                <v-select v-model="selectedFilter" dense :items="filters" item-text="name" item-value="key" label="Filtro" return-object></v-select>
-                <v-text-field label="Texto a buscar" dense v-model="textFilter"></v-text-field>
-                <v-btn @click="setFilter()">
-                  Añadir Filtro
-                </v-btn>
-              </div>
+              <v-row>
+                <v-col>
+                  <div v-for="i in appliedFilters" :key="i.uuid" class="d-flex justify-space-between">
+                    <span>
+                        {{i.filter.name}}: {{i.text}}
+                    </span>
+                    <v-btn icon x-small @click="deleteFilter(i)">
+                      <v-icon x-small>
+                        mdi-close
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-select v-model="selectedFilter" dense outlined dense hide-details :disabled="disableAddFilter" :items="filters" item-text="name" item-value="key" label="Filtro" return-object></v-select>
+                </v-col>
+                <v-col>
+                  <v-text-field label="Texto a buscar" dense outlined v-model="textFilter" :disabled="disableAddFilter" hide-details append-icon="mdi-filter-check-outline" @click:append="setFilter()"></v-text-field>
+                </v-col>
+              </v-row>
             </v-card-text>
           </v-card>
         `
