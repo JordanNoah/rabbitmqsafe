@@ -1,7 +1,12 @@
 const routes = [
     {
         path: '/dashboard',
-        component: dashboard
+        component: dashboard,
+        children: [
+            {
+                path:'rabbit'
+            }
+        ]
     }
 ]
 

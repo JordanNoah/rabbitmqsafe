@@ -12,7 +12,7 @@ const dashboard = {
             </v-row>
           </v-container>
           <v-card outlined>
-            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="titleItems">
+            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="titleItems" :loading="loadingTable">
               <template v-slot:item.content="{item}">
                 <span style="margin: 10px 0; display: -webkit-box; max-width: 250px; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                   {{item.content}}
@@ -27,6 +27,7 @@ const dashboard = {
               </template>
             </v-data-table>
           </v-card>
+          <config-rabbit></config-rabbit>
         </v-container>
     `,
     data: function () {
@@ -65,7 +66,8 @@ const dashboard = {
             ],
             items:[],
             titleItems:0,
-            options:{}
+            options:{},
+            loadingTable:false
         }
     },
     watch:{
@@ -78,16 +80,18 @@ const dashboard = {
     },
     methods:{
         getEvents(){
+            this.loadingTable = true
             const objPage = {
-                page: this.options.page,
+                page: (this.options.page - 1),
                 limit: this.options.itemsPerPage
             }
             axios.post("./api/event/limited",objPage).then((res) => {
-                console.log(res.data)
                 this.items = res.data.events
                 this.titleItems = res.data.totalEvents
             }).catch((err) => {
                 console.log(err)
+            }).finally(() => {
+                this.loadingTable = false
             })
         }
     }

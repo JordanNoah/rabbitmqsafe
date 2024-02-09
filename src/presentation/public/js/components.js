@@ -4,8 +4,8 @@ Vue.component(
         data: function () {
             return {
                 items: [
-                    { title: 'Dashboard', icon: 'mdi-table-arrow-down', link:'dashboard' },
-                    { title: 'Rabbit', icon: 'mdi-rabbit', link: 'rabbit' },
+                    { title: 'Dashboard', icon: 'mdi-table-arrow-down', link:'/dashboard' },
+                    { title: 'Rabbit', icon: 'mdi-rabbit', link: '/dashboard/rabbit' },
                 ]
             }
         },
@@ -235,6 +235,132 @@ Vue.component(
               </v-row>
             </v-card-text>
           </v-card>
+        `
+    }
+)
+
+Vue.component(
+    'config-rabbit',
+    {
+        data: function (){
+            return {
+                dialogConfigRabbit:true,
+                switchSendType:false,
+                validRabbit:false,
+                validFanoutRabbit:false,
+                rabbitMqConfigRules:{
+                    username:[v => !!v || 'El usuario es necesario'],
+                    password:[v => !!v || 'La contraseña es necesario'],
+                    protocol:[v => !!v || 'El protocolo es necesaria'],
+                    hostname:[v => !!v || 'El hostname es necesario'],
+                    port:[v => !!v || 'El puerto es necesario'],
+                    vhost:[v => !!v || 'El vhost es necesario'],
+                    queue:[v => !!v || 'El queue es necesario'],
+                    exchange:[v => !!v || 'El exchange es necesario'],
+                    routingKey: [v => !!v || 'El routing key es necesario']
+                },
+                rabbitMqConfig:{
+                    username: null,
+                    password: null,
+                    protocol: null,
+                    hostname: null,
+                    port: null,
+                    vhost: null,
+                    queue: null,
+                    exchange: null,
+                    routingKey: null
+                }
+            }
+        },
+        mounted:function (){
+            this.loadRabbitConfig()
+        },
+        methods:{
+            saveRabbitMqConfig(){
+                let validatedConfigRabbit = this.$refs.form.validate()
+                let validatedConfigFanout = (!this.switchSendType && this.$refs.fanoutForm.validate()) || this.switchSendType
+
+                if(validatedConfigRabbit && validatedConfigFanout){
+                    localStorage.setItem('rabbit_username',this.encryptValues(this.rabbitMqConfig.username))
+                    localStorage.setItem('rabbit_password',this.rabbitMqConfig.password)
+                    localStorage.setItem('rabbit_protocol',this.rabbitMqConfig.protocol)
+                    localStorage.setItem('rabbit_hostname',this.rabbitMqConfig.hostname)
+                    localStorage.setItem('rabbit_port',this.rabbitMqConfig.port)
+                    localStorage.setItem('rabbit_vhost',this.rabbitMqConfig.vhost)
+                    localStorage.setItem('rabbit_queue',this.rabbitMqConfig.queue)
+                    localStorage.setItem('rabbit_exchange',this.rabbitMqConfig.exchange)
+                    localStorage.setItem('rabbit_routingKey',this.rabbitMqConfig.routingKey)
+                    localStorage.setItem('rabbit_sendType',this.switchSendType ? 'exclusive' : 'fanout')
+                }
+            },
+            encryptValues(value) {
+                return CryptoJS.AES.encrypt(value,'fbr').toString()
+            },
+            desEncryptValues(value){
+
+            },
+            loadRabbitConfig(){
+                localStorage.getItem('rabbit_username')
+                localStorage.getItem()
+            }
+        },
+        template: `
+          <v-dialog v-model="dialogConfigRabbit" max-width="700px">
+            <v-card>    
+              <v-card-title>
+                Rabbit configuration
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-form ref="form" v-model="validRabbit">
+                        <v-row>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Hostname" hide-details="auto" v-model="rabbitMqConfig.hostname" :rules="rabbitMqConfigRules.hostname"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Port" hide-details="auto" v-model="rabbitMqConfig.port" :rules="rabbitMqConfigRules.port"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Protocolo" hide-details="auto" v-model="rabbitMqConfig.protocol" :rules="rabbitMqConfigRules.protocol"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Contraseña" hide-details="auto" v-model="rabbitMqConfig.password" :rules="rabbitMqConfigRules.password"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Usuario" hide-details="auto" v-model="rabbitMqConfig.username" :rules="rabbitMqConfigRules.username"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Vhost" hide-details="auto" v-model="rabbitMqConfig.vhost" :rules="rabbitMqConfigRules.vhost"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field outlined dense label="Queue" hide-details="auto" v-model="rabbitMqConfig.queue" :rules="rabbitMqConfigRules.queue"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-switch v-model="switchSendType" :label="switchSendType ? 'Exclusive' : 'Fanout'" dense hide-details class="mt-0"></v-switch>
+                          </v-col>
+                        </v-row>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-form v-if="!switchSendType" ref="fanoutForm" v-model="validFanoutRabbit">
+                        <v-text-field outlined dense label="Exchange" v-model="rabbitMqConfig.exchange" :rules="rabbitMqConfigRules.exchange"></v-text-field>
+                        <v-text-field outlined dense label="Routing key" v-model="rabbitMqConfig.routingKey" :rules="rabbitMqConfigRules.routingKey"></v-text-field>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions class="d-flex justify-end">
+                <v-btn depressed color="error">Cancel</v-btn>
+                <v-btn depressed color="primary" @click="saveRabbitMqConfig()">Save</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         `
     }
 )
