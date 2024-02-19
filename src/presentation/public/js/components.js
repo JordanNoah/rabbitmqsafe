@@ -274,6 +274,7 @@ Vue.component(
         },
         mounted:function (){
             this.loadRabbitConfig()
+            this.desEncryptValues()
         },
         methods:{
             saveRabbitMqConfig(){
@@ -281,27 +282,75 @@ Vue.component(
                 let validatedConfigFanout = (!this.switchSendType && this.$refs.fanoutForm.validate()) || this.switchSendType
 
                 if(validatedConfigRabbit && validatedConfigFanout){
-                    localStorage.setItem('rabbit_username',this.encryptValues(this.rabbitMqConfig.username))
-                    localStorage.setItem('rabbit_password',this.rabbitMqConfig.password)
-                    localStorage.setItem('rabbit_protocol',this.rabbitMqConfig.protocol)
-                    localStorage.setItem('rabbit_hostname',this.rabbitMqConfig.hostname)
-                    localStorage.setItem('rabbit_port',this.rabbitMqConfig.port)
-                    localStorage.setItem('rabbit_vhost',this.rabbitMqConfig.vhost)
-                    localStorage.setItem('rabbit_queue',this.rabbitMqConfig.queue)
-                    localStorage.setItem('rabbit_exchange',this.rabbitMqConfig.exchange)
-                    localStorage.setItem('rabbit_routingKey',this.rabbitMqConfig.routingKey)
-                    localStorage.setItem('rabbit_sendType',this.switchSendType ? 'exclusive' : 'fanout')
+                    this.encryptValues()
                 }
             },
-            encryptValues(value) {
-                return CryptoJS.AES.encrypt(value,'fbr').toString()
-            },
-            desEncryptValues(value){
+            encryptValues() {
+                const objectRabbit = {
+                    "rabbit_username":this.rabbitMqConfig.username,
+                    "rabbit_password":this.rabbitMqConfig.password,
+                    "rabbit_protocol":this.rabbitMqConfig.protocol,
+                    "rabbit_hostname":this.rabbitMqConfig.hostname,
+                    "rabbit_port":this.rabbitMqConfig.port,
+                    "rabbit_vhost":this.rabbitMqConfig.vhost,
+                    "rabbit_queue":this.rabbitMqConfig.queue,
+                    "rabbit_exchange":this.rabbitMqConfig.exchange,
+                    "rabbit_routingKey":this.rabbitMqConfig.routingKey,
+                    "rabbit_sendType":this.switchSendType ? 'exclusive' : 'fanout'
+                }
 
+                axios.post('./api/secret/encrypt',objectRabbit).then((res) => {
+                    localStorage.setItem('rabbit_username',res.data.rabbit_username)
+                    localStorage.setItem('rabbit_password',res.data.rabbit_password)
+                    localStorage.setItem('rabbit_protocol',res.data.rabbit_protocol)
+                    localStorage.setItem('rabbit_hostname',res.data.rabbit_hostname)
+                    localStorage.setItem('rabbit_port',res.data.rabbit_port)
+                    localStorage.setItem('rabbit_vhost',res.data.rabbit_vhost)
+                    localStorage.setItem('rabbit_queue',res.data.rabbit_queue)
+                    localStorage.setItem('rabbit_exchange',res.data.rabbit_exchange)
+                    localStorage.setItem('rabbit_routingKey',res.data.rabbit_routingKey)
+                    localStorage.setItem('rabbit_sendType',res.data.rabbit_sendType)
+                })
+            },
+            desEncryptValues(){
+                const objectRabbit = {
+                    "rabbit_username":localStorage.getItem('rabbit_username'),
+                    "rabbit_password":localStorage.getItem('rabbit_password'),
+                    "rabbit_protocol":localStorage.getItem('rabbit_protocol'),
+                    "rabbit_hostname":localStorage.getItem('rabbit_hostname'),
+                    "rabbit_port":localStorage.getItem('rabbit_port'),
+                    "rabbit_vhost":localStorage.getItem('rabbit_vhost'),
+                    "rabbit_queue":localStorage.getItem('rabbit_queue'),
+                    "rabbit_exchange":localStorage.getItem('rabbit_exchange'),
+                    "rabbit_routingKey":localStorage.getItem('rabbit_routingKey'),
+                    "rabbit_sendType":localStorage.getItem('rabbit_sendType')
+                }
+
+                const filteredObjectRabbit = {};
+
+                for (const key in objectRabbit) {
+                    if (objectRabbit[key] !== null && objectRabbit[key] !== undefined) {
+                        filteredObjectRabbit[key] = objectRabbit[key];
+                    }
+                }
+
+                if (Object.keys(filteredObjectRabbit).length > 0) {
+                    axios.post('./api/secret/desEncrypt',objectRabbit).then((res) => {
+                        this.rabbitMqConfig.username = res.data.rabbit_username
+                        this.rabbitMqConfig.password = res.data.rabbit_password
+                        this.rabbitMqConfig.protocol = res.data.rabbit_protocol
+                        this.rabbitMqConfig.hostname = res.data.rabbit_hostname
+                        this.rabbitMqConfig.port = res.data.rabbit_port
+                        this.rabbitMqConfig.vhost = res.data.rabbit_vhost
+                        this.rabbitMqConfig.queue = res.data.rabbit_queue
+                        this.rabbitMqConfig.exchange = res.data.rabbit_exchange
+                        this.rabbitMqConfig.routingKey = res.data.rabbit_routingKey
+                        this.switchSendType = res.data.rabbit_sendType === 'exclusive'
+                    })
+                }
             },
             loadRabbitConfig(){
-                localStorage.getItem('rabbit_username')
-                localStorage.getItem()
+
             }
         },
         template: `
