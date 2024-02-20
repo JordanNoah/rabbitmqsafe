@@ -5,7 +5,8 @@ import {TableEventEntity} from "../entities/table-event.entity";
 
 export abstract class EventRepository {
     abstract register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity>
-    abstract getById(id: number): Promise<EventEntity|null>
+    abstract getById(id: number): Promise<EventEntity | null>
+    abstract getByUuid(uuid: string): Promise<EventEntity | null>
     abstract getAll(): Promise<EventEntity[]>
     abstract getLimited(tableDto: TableDto): Promise<TableEventEntity>
 }

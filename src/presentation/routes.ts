@@ -4,6 +4,7 @@ import {SignatureRoutes} from "./signature/routes";
 import {EventRoutes} from "./event/routes";
 import {FieldRoutes} from "./field/routes";
 import {SecretRoutes} from "./secret/routes";
+import {RabbitRoutes} from "./rabbit/routes";
 
 export class AppRoutes {
     static get routes(): Router {
@@ -16,6 +17,7 @@ export class AppRoutes {
             router.use('/api/event', EventRoutes.routes)
             router.use('/api/field', FieldRoutes.routes)
             router.use('/api/secret', SecretRoutes.routes)
+            router.use('/api/rabbit', RabbitRoutes.routes)
 
         return router
     }

@@ -3,4 +3,5 @@ import {FieldsEntity} from "../entities/fields.entity";
 
 export abstract class FieldDatasource {
     abstract register(fieldsRabbitEventDto: FieldsRabbitEventDto): Promise<FieldsEntity>
+    abstract findByPk(id: number): Promise<FieldsEntity | null>
 }

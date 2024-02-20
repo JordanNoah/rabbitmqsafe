@@ -244,7 +244,7 @@ Vue.component(
     {
         data: function (){
             return {
-                dialogConfigRabbit:true,
+                dialogConfigRabbit:false,
                 switchSendType:false,
                 validRabbit:false,
                 validFanoutRabbit:false,
@@ -275,8 +275,20 @@ Vue.component(
         mounted:function (){
             this.loadRabbitConfig()
             this.desEncryptValues()
+            this.dialogConfigRabbit = this.$route.name === 'rabbit';
+        },
+        watch:{
+            '$route':{
+                handler: function (route){
+                    this.dialogConfigRabbit = route.name === 'rabbit';
+                },
+                deep: true
+            }
         },
         methods:{
+            closeRabbitMqConfig(){
+                this.$router.push({ name:'dashboard' })
+            },
             saveRabbitMqConfig(){
                 let validatedConfigRabbit = this.$refs.form.validate()
                 let validatedConfigFanout = (!this.switchSendType && this.$refs.fanoutForm.validate()) || this.switchSendType
@@ -335,7 +347,7 @@ Vue.component(
                 }
 
                 if (Object.keys(filteredObjectRabbit).length > 0) {
-                    axios.post('./api/secret/desEncrypt',objectRabbit).then((res) => {
+                    axios.post('./api/secret/desEncrypt',filteredObjectRabbit).then((res) => {
                         this.rabbitMqConfig.username = res.data.rabbit_username
                         this.rabbitMqConfig.password = res.data.rabbit_password
                         this.rabbitMqConfig.protocol = res.data.rabbit_protocol
@@ -405,7 +417,7 @@ Vue.component(
                 </v-container>
               </v-card-text>
               <v-card-actions class="d-flex justify-end">
-                <v-btn depressed color="error">Cancel</v-btn>
+                <v-btn depressed color="error" @click="closeRabbitMqConfig()">Cancel</v-btn>
                 <v-btn depressed color="primary" @click="saveRabbitMqConfig()">Save</v-btn>
               </v-card-actions>
             </v-card>

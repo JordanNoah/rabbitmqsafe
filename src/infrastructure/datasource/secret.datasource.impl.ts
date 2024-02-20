@@ -20,7 +20,6 @@ export class SecretDatasourceImpl implements SecretDatasource{
             const bytes  = CryptoJs.Rabbit.decrypt(key, Config.ENCRYPT_KEY);
             return bytes.toString(CryptoJs.enc.Utf8);
         }catch (error) {
-            console.log(error)
             if (error instanceof CustomError) {
                 throw error;
             }

@@ -19,7 +19,7 @@ const dashboard = {
                 </span>
               </template>
               <template v-slot:item.action="{item}">
-                <v-btn icon>
+                <v-btn icon @click="publishRabbit(item.uuid)">
                   <v-icon>
                     mdi-cloud-upload-outline
                   </v-icon>
@@ -76,7 +76,7 @@ const dashboard = {
                 this.getEvents()
             },
             deep: true
-        },
+        }
     },
     methods:{
         getEvents(){
@@ -92,6 +92,35 @@ const dashboard = {
                 console.log(err)
             }).finally(() => {
                 this.loadingTable = false
+            })
+        },
+        publishRabbit(uuidEvent){
+            const objectRabbit = {
+                "rabbit_username":localStorage.getItem('rabbit_username'),
+                "rabbit_password":localStorage.getItem('rabbit_password'),
+                "rabbit_protocol":localStorage.getItem('rabbit_protocol'),
+                "rabbit_hostname":localStorage.getItem('rabbit_hostname'),
+                "rabbit_port":localStorage.getItem('rabbit_port'),
+                "rabbit_vhost":localStorage.getItem('rabbit_vhost'),
+                "rabbit_queue":localStorage.getItem('rabbit_queue'),
+                "rabbit_exchange":localStorage.getItem('rabbit_exchange'),
+                "rabbit_routingKey":localStorage.getItem('rabbit_routingKey'),
+                "rabbit_sendType":localStorage.getItem('rabbit_sendType'),
+                "uuid_event":uuidEvent
+            }
+
+            const filteredObjectRabbit = {};
+
+            for (const key in objectRabbit) {
+                if (objectRabbit[key] !== null && objectRabbit[key] !== undefined) {
+                    filteredObjectRabbit[key] = objectRabbit[key];
+                }
+            }
+
+            axios.post("./api/rabbit/publish",filteredObjectRabbit).then((res) => {
+                console.log(res.data())
+            }).catch((err) => {
+                console.log(err)
             })
         }
     }

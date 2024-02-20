@@ -5,6 +5,7 @@ import { SequelizeProperty } from "./Properties";
 
 interface EventsRow {
     id: number,
+    uuid: string,
     content?: string,
     fieldId: number,
     propertyId: number,
@@ -14,6 +15,7 @@ interface EventsRow {
 
 export class SequelizeEvent extends Model<EventsRow, Omit<EventsRow, 'id'>> {
     declare id: number
+    declare uuid: string
     declare content: string | null
     declare fieldId: number
     declare propertyId: number
@@ -26,6 +28,10 @@ SequelizeEvent.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
+    },
+    uuid:{
+        type: DataTypes.UUID,
+        allowNull:false
     },
     content:{
         type:DataTypes.TEXT('long'),

@@ -2,9 +2,11 @@ const routes = [
     {
         path: '/dashboard',
         component: dashboard,
+        name: 'dashboard',
         children: [
             {
-                path:'rabbit'
+                path:'rabbit',
+                name:'rabbit'
             }
         ]
     }

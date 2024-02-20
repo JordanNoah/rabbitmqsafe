@@ -15,6 +15,10 @@ export class EventRepositoryImpl implements EventRepository{
         return this.eventDatasource.getById(id)
     }
 
+    getByUuid(uuid: string): Promise<EventEntity | null> {
+        return this.eventDatasource.getByUuid(uuid)
+    }
+
     getAll(): Promise<EventEntity[]> {
         return this.eventDatasource.getAll()
     }

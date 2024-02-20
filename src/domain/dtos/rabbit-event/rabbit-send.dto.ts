@@ -15,33 +15,33 @@ export class RabbitSendDto {
 
     static create(object:{[key:string]:any}):[string?,RabbitSendDto?]{
         const {
-            username,
-            password,
-            protocol,
-            hostname,
-            port,
-            vhost,
-            queue,
-            exchange,
-            routingKey,
-            sendType,
-            uuidEvent
+            rabbit_username,
+            rabbit_password,
+            rabbit_protocol,
+            rabbit_hostname,
+            rabbit_port,
+            rabbit_vhost,
+            rabbit_queue,
+            rabbit_exchange,
+            rabbit_routingKey,
+            rabbit_sendType,
+            uuid_event
         } = object
 
         return [
             undefined,
             new RabbitSendDto(
-                username,
-                password,
-                protocol,
-                hostname,
-                port,
-                vhost,
-                queue,
-                exchange,
-                routingKey,
-                sendType,
-                uuidEvent
+                rabbit_username,
+                rabbit_password,
+                rabbit_protocol,
+                rabbit_hostname,
+                rabbit_port,
+                rabbit_vhost,
+                rabbit_queue,
+                rabbit_exchange,
+                rabbit_routingKey,
+                rabbit_sendType,
+                uuid_event
             )
         ]
     }

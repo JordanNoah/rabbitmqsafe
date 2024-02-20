@@ -8,4 +8,8 @@ export class FieldRepositoryImpl implements FieldRepository {
     register(fieldsRabbitEventDto: FieldsRabbitEventDto): Promise<FieldsEntity> {
         return this.fieldDatasource.register(fieldsRabbitEventDto)
     }
+
+    findByPk(id: number): Promise<FieldsEntity | null> {
+        return this.fieldDatasource.findByPk(id)
+    }
 }
