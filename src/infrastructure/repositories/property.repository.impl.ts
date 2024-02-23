@@ -1,4 +1,4 @@
-import {PropertyRepository} from "../../domain/repositories/property.repository";
+ import {PropertyRepository} from "../../domain/repositories/property.repository";
 import {PropertyDatasource} from "../../domain/datasources/property.datasource";
 import {PropertiesEntity, PropertiesRabbitEventDto} from "../../domain";
 

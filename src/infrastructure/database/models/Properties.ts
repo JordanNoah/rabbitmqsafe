@@ -4,38 +4,38 @@ import { sequelize } from "../sequelize";
 interface PropertyRow {
     id: number,
     contentType?: string,
-    contentEncoding?: string | null,
-    headers?: string | null,
-    deliveryMode?: number | null,
-    priority?: number | null,
-    correlationId?: number | null,
-    replyTo?: string | null,
-    expiration?: string | null,
-    messageId?: string | null,
-    timestamp?: string | null,
-    type?: string | null,
-    userId?: string | null,
-    appId?: string | null,
-    clusterId?: string | null,
+    contentEncoding?: string,
+    headers?: string,
+    deliveryMode?: number,
+    priority?: number,
+    correlationId?: number,
+    replyTo?: string,
+    expiration?: string,
+    messageId?: string,
+    timestamp?: string,
+    type?: string,
+    userId?: string,
+    appId?: string,
+    clusterId?: string,
     createdAt?: Date,
     updatedAt?: Date
 }
 
 export class SequelizeProperty extends Model<PropertyRow,Omit<PropertyRow, 'id'>> {
     declare id: number
-    declare contentType: string
+    declare contentType: string | undefined
     declare contentEncoding: string | null
     declare headers: string | null
-    declare deliveryMode: number | null
+    declare deliveryMode: number | undefined
     declare priority: number | null
     declare correlationId: number | null
     declare replyTo: string | null
     declare expiration: string | null
-    declare messageId: string | null
-    declare timestamp: string | null
-    declare type: string | null
+    declare messageId: string | undefined
+    declare timestamp: number | undefined
+    declare type: string | undefined
     declare userId: string | null
-    declare appId: string | null
+    declare appId: string | undefined
     declare clusterId: string | null
     declare readonly createdAt: Date
     declare readonly updatedAt: Date

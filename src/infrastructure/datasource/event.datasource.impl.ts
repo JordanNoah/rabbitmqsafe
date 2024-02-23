@@ -52,38 +52,18 @@ export class EventDatasourceImpl implements EventDatasource {
 
     async getById(id: number): Promise<EventEntity | null> {
         try {
-
-            const fieldDatasourceImpl = new FieldDatasourceImpl()
-            const propertyDatasourceImpl = new PropertyDatasourceImpl()
-
-            const sequelizeEvent = await SequelizeEvent.findByPk(id,{
-                include:[
-                    {
-                        model:SequelizeField,
-                        as:'field'
-                    },
-                    {
-                        model:SequelizeProperty,
-                        as:'property'
-                    }
-                ]
-            })
-
-            if (!sequelizeEvent) return null
-
-            const sequelizeField = fieldDatasourceImpl.findByPk(sequelizeEvent.fieldId)
-            const seq = propertyDatasourceImpl.
-
-            return new EventEntity(
-                sequelizeEvent.id,
-                sequelizeEvent.uuid,
-                sequelizeEvent.fieldId,
-                sequelizeEvent.propertyId,
-                sequelizeEvent.content,
-                {},
-                {},
-                sequelizeEvent.createdAt,
-                sequelizeEvent.updatedAt
+            return await SequelizeEvent.findByPk(id, {
+                    include: [
+                        {
+                            model: SequelizeField,
+                            as: 'field'
+                        },
+                        {
+                            model: SequelizeProperty,
+                            as: 'property'
+                        }
+                    ]
+                }
             )
         }catch (error) {
             if (error instanceof CustomError){
@@ -162,6 +142,7 @@ export class EventDatasourceImpl implements EventDatasource {
                 rows
             )
         }catch (error){
+            console.log(error)
             if (error instanceof CustomError){
                 throw error;
             }

@@ -29,4 +29,14 @@ export class PropertyDatasourceImpl implements PropertyDatasource {
             throw CustomError.internalSever()
         }
     }
+    async findByPk(id: number): Promise<PropertiesEntity | null> {
+        try {
+            return await SequelizeProperty.findByPk(id)
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
 }

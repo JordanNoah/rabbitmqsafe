@@ -21,6 +21,8 @@ export class SequelizeEvent extends Model<EventsRow, Omit<EventsRow, 'id'>> {
     declare propertyId: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
+    declare field: SequelizeField
+    declare property: SequelizeProperty
 }
 
 SequelizeEvent.init({

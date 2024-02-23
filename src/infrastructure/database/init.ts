@@ -7,8 +7,8 @@ import {sequelize} from "./sequelize";
 export const DbSequelize = (): Promise<void> => {
     return new Promise( async (resolve, reject) => {
 
-        SequelizeEvent.belongsTo(SequelizeField,{as:'field'});
-        SequelizeEvent.belongsTo(SequelizeProperty,{as:'property'});
+        SequelizeEvent.belongsTo(SequelizeField,{ foreignKey:'fieldId', as:'field'});
+        SequelizeEvent.belongsTo(SequelizeProperty,{ foreignKey:'propertyId', as:'property'});
 
         sequelize.sync({force:false}).then(() => {
             resolve();
