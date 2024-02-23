@@ -55,7 +55,7 @@ export class RabbitDatasourceImpl implements RabbitDatasource {
             if(rabbitConfig.sendType === "exclusive"){
                 channel.sendToQueue(
                     queue.queue,
-                    Buffer.from('Exclusivo'),
+                    Buffer.from(eventToPublish.content ?? ''),
                     options,
                     (err, ok) => {
                         if(err){
@@ -69,7 +69,7 @@ export class RabbitDatasourceImpl implements RabbitDatasource {
                 channel.publish(
                     exchange.exchange,
                     rabbitConfig.routingKey,
-                    Buffer.from('Global'),
+                    Buffer.from(eventToPublish.content ?? ''),
                     options,
                     (err, ok) => {
                         if(err){

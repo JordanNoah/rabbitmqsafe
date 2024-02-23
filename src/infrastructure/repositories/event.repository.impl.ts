@@ -1,6 +1,7 @@
 import {EventDatasource, EventEntity, EventRepository, ReceivedRabbitEventDto} from "../../domain";
 import {TableDto} from "../../domain/dtos/client/table.dto";
 import {TableEventEntity} from "../../domain/entities/table-event.entity";
+import {FiltersTableDto} from "../../domain/dtos/client/filters-table.dto";
 
 export class EventRepositoryImpl implements EventRepository{
     constructor(
@@ -25,5 +26,9 @@ export class EventRepositoryImpl implements EventRepository{
 
     getLimited(tableDto: TableDto): Promise<TableEventEntity> {
         return this.eventDatasource.getLimited(tableDto)
+    }
+
+    getByFilters(filtersTableDto: FiltersTableDto): Promise<TableEventEntity> {
+        return this.eventDatasource.getByFilters(filtersTableDto)
     }
 }

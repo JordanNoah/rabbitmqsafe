@@ -10,6 +10,7 @@ import {SignatureDatasourceImpl} from "./signature.datasource.impl";
 import {TableDto} from "../../domain/dtos/client/table.dto";
 import {TableEventEntity} from "../../domain/entities/table-event.entity";
 import * as crypto from "crypto";
+import {FiltersTableDto} from "../../domain/dtos/client/filters-table.dto";
 
 export class EventDatasourceImpl implements EventDatasource {
     async register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity> {
@@ -142,7 +143,40 @@ export class EventDatasourceImpl implements EventDatasource {
                 rows
             )
         }catch (error){
-            console.log(error)
+            if (error instanceof CustomError){
+                throw error;
+            }
+            throw CustomError.internalSever()
+        }
+    }
+
+    async getByFilters(filtersTableDto: FiltersTableDto): Promise<TableEventEntity> {
+        try {
+            const filters = filtersTableDto.filters.map(el => {
+                return {
+                    [el.filter.key]:el.text
+                }
+            })
+
+            const { count, rows } = await SequelizeEvent.findAndCountAll({
+                include:[
+                    {
+                        model:SequelizeField,
+                        as:'field'
+                    },
+                    {
+                        model:SequelizeProperty,
+                        as:'property'
+                    }
+                ],
+                where:filters,
+                limit:filtersTableDto.tableConfig.limit,
+                offset:filtersTableDto.tableConfig.page * filtersTableDto.tableConfig.limit
+            })
+
+            return new TableEventEntity(count,rows)
+        } catch (error) {
+            console.log("error filter: ",error)
             if (error instanceof CustomError){
                 throw error;
             }

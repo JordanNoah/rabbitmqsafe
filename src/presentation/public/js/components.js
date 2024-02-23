@@ -160,6 +160,7 @@ Vue.component(
               this.filters.splice(index,1)
               this.textFilter = null
               this.defaultSelectFilter()
+              this.findByFilters()
           },
             defaultSelectFilter() {
               if (this.filters.length === 0){
@@ -186,8 +187,14 @@ Vue.component(
             reorderFilterArray(){
               this.filters.sort(this.compareFiltersArrays)
             },
-            findByFilter(){
-
+            findByFilters(){
+              const body = {
+                  filters:this.appliedFilters,
+                  tableConfig:this.$store.state.tableConfig
+              }
+              axios.post('./api/event/filter',body).then((res) => {
+                console.log(res.data)
+              })
             }
         },
         watch:{
@@ -273,7 +280,6 @@ Vue.component(
             }
         },
         mounted:function (){
-            this.loadRabbitConfig()
             this.desEncryptValues()
             this.dialogConfigRabbit = this.$route.name === 'rabbit';
         },
@@ -361,12 +367,9 @@ Vue.component(
                     })
                 }
             },
-            loadRabbitConfig(){
-
-            }
         },
         template: `
-          <v-dialog v-model="dialogConfigRabbit" max-width="700px">
+          <v-dialog v-model="dialogConfigRabbit" max-width="700px" @click:outside="closeRabbitMqConfig()">
             <v-card>    
               <v-card-title>
                 Rabbit configuration

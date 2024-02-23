@@ -12,7 +12,7 @@ interface PropertyRow {
     replyTo?: string,
     expiration?: string,
     messageId?: string,
-    timestamp?: string,
+    timestamp?: number,
     type?: string,
     userId?: string,
     appId?: string,
@@ -84,7 +84,7 @@ SequelizeProperty.init({
         allowNull: true
     },
     timestamp:{
-        type: DataTypes.TEXT,
+        type: DataTypes.BIGINT,
         allowNull: true
     },
     type:{

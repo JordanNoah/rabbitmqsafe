@@ -9,7 +9,7 @@ export class PropertiesRabbitEventDto {
         public replyTo: string | undefined,
         public expiration: string | undefined,
         public messageId: string | undefined,
-        public timestamp: string | undefined,
+        public timestamp: number | undefined,
         public type: string,
         public userId: string | undefined,
         public appId: string | undefined,

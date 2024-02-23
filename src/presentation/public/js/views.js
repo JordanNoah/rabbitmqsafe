@@ -73,6 +73,7 @@ const dashboard = {
     watch:{
         options:{
             handler(){
+                this.$store.commit('setConfigTable',this.options)
                 this.getEvents()
             },
             deep: true

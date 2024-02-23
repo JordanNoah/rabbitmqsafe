@@ -15,6 +15,7 @@ export class EventRoutes {
         router.get('/id/:id', controller.getById)
         router.get('/', controller.getAll)
         router.post('/limited',controller.getLimited)
+        router.post('/filter',controller.getByFilters)
         return router;
     }
 }

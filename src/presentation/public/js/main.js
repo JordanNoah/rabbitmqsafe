@@ -16,8 +16,27 @@ const router = new VueRouter({
     routes
 })
 
+const store = new Vuex.Store({
+    state:{
+        tableConfig: {
+            page:0,
+            limit:10
+        }
+    },
+    mutations:{
+        setConfigTable(state,configTable){
+            state.tableConfig = {
+                page: configTable.page,
+                limit: configTable.itemsPerPage
+            }
+        }
+    },
+    actions:{}
+})
+
 new Vue({
     el:"#app",
     vuetify: new Vuetify(),
-    router
+    router,
+    store:store
 })

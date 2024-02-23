@@ -34,7 +34,7 @@ export class Rabbitmq {
             AppConfig.RABBIT_EXCHANGE,
             AppConfig.RABBIT_ROUTING_KEY
         )
-        await this._channel.prefetch(20);
+        await this._channel.prefetch(200);
     }
 
     public static async consume(){
