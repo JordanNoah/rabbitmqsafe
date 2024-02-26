@@ -11,6 +11,7 @@ import {TableDto} from "../../domain/dtos/client/table.dto";
 import {TableEventEntity} from "../../domain/entities/table-event.entity";
 import * as crypto from "crypto";
 import {FiltersTableDto} from "../../domain/dtos/client/filters-table.dto";
+import {Op} from "sequelize";
 
 export class EventDatasourceImpl implements EventDatasource {
     async register(receivedRabbitEventDto: ReceivedRabbitEventDto): Promise<EventEntity> {
@@ -153,10 +154,15 @@ export class EventDatasourceImpl implements EventDatasource {
     async getByFilters(filtersTableDto: FiltersTableDto): Promise<TableEventEntity> {
         try {
             const filters = filtersTableDto.filters.map(el => {
+                console.log(el)
+                if(el.filter.key == 'id') return {[el.filter.key]: {[Op.eq]: parseInt(el.text)}}
+                if(el.filter.key == 'signature') return
                 return {
                     [el.filter.key]:el.text
                 }
             })
+
+            console.log(filters)
 
             const { count, rows } = await SequelizeEvent.findAndCountAll({
                 include:[
@@ -169,7 +175,6 @@ export class EventDatasourceImpl implements EventDatasource {
                         as:'property'
                     }
                 ],
-                where:filters,
                 limit:filtersTableDto.tableConfig.limit,
                 offset:filtersTableDto.tableConfig.page * filtersTableDto.tableConfig.limit
             })
