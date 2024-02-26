@@ -2,10 +2,7 @@ import express, { Router } from 'express'
 import http from 'http'
 import { DbSequelize } from "../infrastructure/database/init";
 import {Rabbitmq} from "../infrastructure/eventBus/rabbitmq";
-import {SequelizeField} from "../infrastructure/database/models/Fields";
-import {SequelizeEvent} from "../infrastructure/database/models/Events";
-import {SequelizeProperty} from "../infrastructure/database/models/Properties";
-import {SequelizeSignature} from "../infrastructure/database/models/Signatures";
+import {SocketManager} from "../infrastructure/socket/io";
 
 interface Options {
     port?: number
@@ -30,6 +27,8 @@ export class Server {
                 await Rabbitmq.init()
 
                 const server = http.createServer(this.app)
+
+                new SocketManager(server)
 
                 this.app.use(express.json())
                 this.app.use(this.routes)

@@ -12,7 +12,7 @@ const dashboard = {
             </v-row>
           </v-container>
           <v-card outlined>
-            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="titleItems" :loading="loadingTable">
+            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="itemsLength" :loading="loadingTable">
               <template v-slot:item.content="{item}">
                 <span style="margin: 10px 0; display: -webkit-box; max-width: 250px; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                   {{item.content}}
@@ -64,9 +64,6 @@ const dashboard = {
                     value:'action'
                 },
             ],
-            items:[],
-            titleItems:0,
-            options:{},
             loadingTable:false
         }
     },
@@ -77,6 +74,31 @@ const dashboard = {
                 this.getEvents()
             },
             deep: true
+        },
+        appliedFilters:{
+            handler() {
+                this.getEvents()
+            },
+            deep: true
+        }
+    },
+    computed:{
+        options: {
+            get(){
+                return this.$store.state.optionsDatatable
+            },
+            set(newValue){
+                this.$store.state.optionsDatatable = newValue
+            }
+        },
+        items: function (){
+            return this.$store.state.eventsItemsTable
+        },
+        itemsLength: function () {
+            return this.$store.state.eventsItemsLengthTable
+        },
+        appliedFilters: function () {
+            return this.$store.state.appliedFilters
         }
     },
     methods:{
@@ -86,14 +108,28 @@ const dashboard = {
                 page: (this.options.page - 1),
                 limit: this.options.itemsPerPage
             }
-            axios.post("./api/event/limited",objPage).then((res) => {
-                this.items = res.data.events
-                this.titleItems = res.data.totalEvents
-            }).catch((err) => {
-                console.log(err)
-            }).finally(() => {
-                this.loadingTable = false
-            })
+
+            if(this.appliedFilters.length === 0){
+                axios.post("./api/event/limited",objPage).then((res) => {
+                    this.$store.commit('setEventsItemsTable',res.data.events)
+                    this.$store.commit('setEventsItemsLengthTable',res.data.totalEvents)
+                }).catch((err) => {
+                    console.log(err)
+                }).finally(() => {
+                    this.loadingTable = false
+                })
+            }else{
+                const body = {
+                    filters:this.appliedFilters,
+                    tableConfig:objPage
+                }
+                axios.post('./api/event/filter',body).then((res) => {
+                    this.$store.commit('setEventsItemsTable',res.data.events)
+                    this.$store.commit('setEventsItemsLengthTable',res.data.totalEvents)
+                }).finally(() => {
+                    this.loadingTable = false
+                })
+            }
         },
         publishRabbit(uuidEvent){
             const objectRabbit = {

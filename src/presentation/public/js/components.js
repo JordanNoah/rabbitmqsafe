@@ -123,39 +123,27 @@ Vue.component(
     {
         data: function () {
             return {
-                defaultFilters:[
-                    {
-                        name: 'Id',
-                        key: 'id'
-                    },
-                    {
-                        name: 'Signature',
-                        key: 'signature'
-                    },
-                    {
-                        name: 'Content',
-                        key: 'content'
-                    },
-                    {
-                        name: 'Timestamp',
-                        key: 'timestamp'
-                    }
-                ],
                 filters:[],
                 selectedFilter:null,
-                appliedFilters:[],
                 textFilter:null,
                 disableAddFilter:false
             }
         },
+        computed:{
+            appliedFilters: function (){
+                return this.$store.state.appliedFilters
+            },
+            defaultFilters: function () {
+                return this.$store.state.defaultFilters
+            }
+        },
         methods:{
           setFilter(){
-              const objectFilter = {
-                  uuid: crypto.randomUUID(),
-                  filter: this.selectedFilter,
-                  text: this.textFilter
+              const filter = {
+                  selectedFilter: this.selectedFilter,
+                  textFilter: this.textFilter
               }
-              this.appliedFilters.push(objectFilter)
+              this.$store.commit('setFilterTable',filter)
               const index = this.filters.findIndex(e => e.key === this.selectedFilter.key)
               this.filters.splice(index,1)
               this.textFilter = null
@@ -177,6 +165,7 @@ Vue.component(
                 this.filters.splice(indexDefaultFilter,0,filter.filter)
                 this.defaultSelectFilter()
                 this.reorderFilterArray()
+                this.findByFilters()
             },
             compareFiltersArrays(objA,objB){
               let indexA = this.defaultFilters.findIndex(e => e.key === objA.key);
@@ -188,13 +177,7 @@ Vue.component(
               this.filters.sort(this.compareFiltersArrays)
             },
             findByFilters(){
-              const body = {
-                  filters:this.appliedFilters,
-                  tableConfig:this.$store.state.tableConfig
-              }
-              axios.post('./api/event/filter',body).then((res) => {
-                console.log(res.data)
-              })
+              this.$store.commit('resetTableConfig')
             }
         },
         watch:{
@@ -216,18 +199,11 @@ Vue.component(
             </v-card-title>
             <v-card-text>
               <v-row>
-                <v-col v-if="appliedFilters.length > 0">
-                  <div v-for="i in appliedFilters" :key="i.uuid" class="d-flex justify-space-between">
-                    <span>
-                        {{i.filter.name}}: {{i.text}}
-                    </span>
-                    <v-btn icon x-small @click="deleteFilter(i)">
-                      <v-icon x-small>
-                        mdi-close
-                      </v-icon>
-                    </v-btn>
-                  </div>
-                </v-col>
+                <div v-if="appliedFilters.length > 0" class="mx-4">
+                  <v-chip v-for="i in appliedFilters" :key="i.uuid" class="mb-1 mr-1" close @click:close="deleteFilter(i)">
+                    {{i.filter.name}}: {{i.text}}
+                  </v-chip>
+                </div>
                 <v-col v-else>
                   Filtros no seleccionados
                 </v-col>
@@ -300,7 +276,8 @@ Vue.component(
                 let validatedConfigFanout = (!this.switchSendType && this.$refs.fanoutForm.validate()) || this.switchSendType
 
                 if(validatedConfigRabbit && validatedConfigFanout){
-                    this.encryptValues()
+                     this.encryptValues()
+                     this.closeRabbitMqConfig()
                 }
             },
             encryptValues() {

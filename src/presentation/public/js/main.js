@@ -1,3 +1,6 @@
+const ioServer = io()
+console.log(ioServer)
+
 const routes = [
     {
         path: '/dashboard',
@@ -21,14 +24,41 @@ const store = new Vuex.Store({
         tableConfig: {
             page:0,
             limit:10
-        }
+        },
+        eventsItemsTable:[],
+        eventsItemsLengthTable:0,
+        appliedFilters:[],
+        defaultFilters:[{name: 'Id',key: 'id'},{name: 'Signature',key: 'signature'},{name: 'Content',key: 'content'},{name: 'Timestamp',key: 'timestamp'}],
+        optionsDatatable:{}
     },
     mutations:{
         setConfigTable(state,configTable){
             state.tableConfig = {
-                page: configTable.page,
+                page: configTable.page -1,
                 limit: configTable.itemsPerPage
             }
+        },
+        setEventsItemsTable(state, eventsItems) {
+            state.eventsItemsTable = eventsItems
+        },
+        setEventsItemsLengthTable(state, itemsLength) {
+            state.eventsItemsLengthTable = itemsLength
+        },
+        setFilterTable(state, filter) {
+            const objectFilter = {
+                uuid: crypto.randomUUID(),
+                filter: filter.selectedFilter,
+                text: filter.textFilter
+            }
+            state.appliedFilters.push(objectFilter)
+        },
+        removeFilterTable(state, filter) {},
+        resetTableConfig(state){
+            state.tableConfig = {
+                page: 0,
+                limit: 10
+            }
+            state.optionsDatatable.page = 1
         }
     },
     actions:{}
