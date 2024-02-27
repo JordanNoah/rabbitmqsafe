@@ -67,6 +67,9 @@ const dashboard = {
             loadingTable:false
         }
     },
+    mounted:function (){
+        this.$store.commit('updateIoSocket')
+    },
     watch:{
         options:{
             handler(){

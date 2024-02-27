@@ -17,4 +17,8 @@ export class SocketManager {
     public emit(eventName: string, data: any) {
         this.io.emit(eventName, data);
     }
+
+    public getSocket(): Server{
+        return this.io;
+    }
 }

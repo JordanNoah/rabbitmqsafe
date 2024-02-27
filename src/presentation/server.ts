@@ -28,7 +28,9 @@ export class Server {
 
                 const server = http.createServer(this.app)
 
-                new SocketManager(server)
+                const socketManager = new SocketManager(server)
+
+                socketManager.emit('isSyncRabbit',true)
 
                 this.app.use(express.json())
                 this.app.use(this.routes)

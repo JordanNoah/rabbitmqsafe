@@ -1,7 +1,8 @@
-const ioServer = io()
-console.log(ioServer)
-
 const routes = [
+    {
+        path: '/',
+        redirect: '/dashboard'
+    },
     {
         path: '/dashboard',
         component: dashboard,
@@ -29,7 +30,9 @@ const store = new Vuex.Store({
         eventsItemsLengthTable:0,
         appliedFilters:[],
         defaultFilters:[{name: 'Id',key: 'id'},{name: 'Signature',key: 'signature'},{name: 'Content',key: 'content'},{name: 'Timestamp',key: 'timestamp'}],
-        optionsDatatable:{}
+        optionsDatatable:{},
+        io:null,
+        isSyncRabbit
     },
     mutations:{
         setConfigTable(state,configTable){
@@ -59,6 +62,9 @@ const store = new Vuex.Store({
                 limit: 10
             }
             state.optionsDatatable.page = 1
+        },
+        updateIoSocket(state){
+            state.io = io()
         }
     },
     actions:{}
