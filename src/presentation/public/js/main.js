@@ -32,13 +32,22 @@ const store = new Vuex.Store({
         defaultFilters:[{name: 'Id',key: 'id'},{name: 'Signature',key: 'signature'},{name: 'Content',key: 'content'},{name: 'Timestamp',key: 'timestamp'}],
         optionsDatatable:{},
         io:null,
-        isSyncRabbit
+        isSyncRabbit:true,
+        jsonViewer:{
+            open:false,
+            item:null
+        }
     },
     mutations:{
+        openJsonViewer(state, itemJson){
+            state.jsonViewer.open = true
+            state.jsonViewer.item = itemJson
+        },
         setConfigTable(state,configTable){
             state.tableConfig = {
                 page: configTable.page -1,
-                limit: configTable.itemsPerPage
+                limit: configTable.itemsPerPage,
+                order: {row:configTable.sortBy[0],desc:configTable.sortDesc[0]}
             }
         },
         setEventsItemsTable(state, eventsItems) {
@@ -65,6 +74,10 @@ const store = new Vuex.Store({
         },
         updateIoSocket(state){
             state.io = io()
+            state.io.on("isSyncRabbit",(args) => {
+                console.log(args)
+                state.isSyncRabbit = args.sync
+            })
         }
     },
     actions:{}

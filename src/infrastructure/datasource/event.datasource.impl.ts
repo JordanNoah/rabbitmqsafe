@@ -11,7 +11,7 @@ import {TableDto} from "../../domain/dtos/client/table.dto";
 import {TableEventEntity} from "../../domain/entities/table-event.entity";
 import * as crypto from "crypto";
 import {FiltersTableDto} from "../../domain/dtos/client/filters-table.dto";
-import {Op, WhereOptions} from "sequelize";
+import {Op, OrderItem, WhereOptions} from "sequelize";
 import {FilterDto} from "../../domain/dtos/client/filter.dto";
 
 export class EventDatasourceImpl implements EventDatasource {
@@ -125,6 +125,7 @@ export class EventDatasourceImpl implements EventDatasource {
 
     async getLimited(tableDto: TableDto): Promise<TableEventEntity> {
         try {
+            const order: OrderItem = [tableDto.order.row,tableDto.order.desc ? 'DESC': 'ASC']
             const { count ,rows} = await SequelizeEvent.findAndCountAll({
                 include:[
                     {
@@ -137,7 +138,8 @@ export class EventDatasourceImpl implements EventDatasource {
                     }
                 ],
                 limit:tableDto.limit,
-                offset:tableDto.page * tableDto.limit
+                offset:tableDto.page * tableDto.limit,
+                order: [order]
             })
 
             return new TableEventEntity(
@@ -157,6 +159,8 @@ export class EventDatasourceImpl implements EventDatasource {
 
             const eventWhereClause: WhereOptions<any> = {}
             const propertyWhereClause: WhereOptions<any> = {}
+
+            const order: OrderItem = [filtersTableDto.tableConfig.order.row,filtersTableDto.tableConfig.order.desc ? 'DESC': 'ASC']
 
             filtersTableDto.filters.forEach((el: FilterDto) => {
                 if(el.filter.key == 'id') {eventWhereClause[el.filter.key] = {[Op.eq]: parseInt(el.text)}}
@@ -178,7 +182,8 @@ export class EventDatasourceImpl implements EventDatasource {
                 ],
                 where: eventWhereClause,
                 limit: filtersTableDto.tableConfig.limit,
-                offset: filtersTableDto.tableConfig.page * filtersTableDto.tableConfig.limit
+                offset: filtersTableDto.tableConfig.page * filtersTableDto.tableConfig.limit,
+                order:[order]
             })
 
             return new TableEventEntity(count,rows)

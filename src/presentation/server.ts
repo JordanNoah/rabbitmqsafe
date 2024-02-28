@@ -24,13 +24,11 @@ export class Server {
         DbSequelize()
             .then(async ()=> {
 
-                await Rabbitmq.init()
-
                 const server = http.createServer(this.app)
 
-                const socketManager = new SocketManager(server)
+                new SocketManager(server)
 
-                socketManager.emit('isSyncRabbit',true)
+                await Rabbitmq.init()
 
                 this.app.use(express.json())
                 this.app.use(this.routes)

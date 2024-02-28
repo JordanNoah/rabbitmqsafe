@@ -9,6 +9,12 @@ Vue.component(
                 ]
             }
         },
+        computed:{
+            isSyncRabbit: function () {
+                return this.$store.state.isSyncRabbit
+            }
+        },
+        watch:{},
         template: `
             <v-navigation-drawer mini-variant permanent app>
                 <v-list dense>
@@ -26,7 +32,8 @@ Vue.component(
                   <v-list dense>
                     <v-list-item link>
                       <v-list-item-icon>
-                        <v-icon>mdi-sync</v-icon>
+                        <v-icon v-if="isSyncRabbit" class="mdi-spin" color="primary">mdi-autorenew</v-icon>
+                        <v-icon v-else>mdi-sync</v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
                         <v-list-item-title></v-list-item-title>
@@ -403,5 +410,40 @@ Vue.component(
             </v-card>
           </v-dialog>
         `
+    }
+)
+
+Vue.component(
+    'dialog-json-viewer',
+    {
+        template: `
+            <v-dialog v-model="dialog.open" max-width="500px">
+              <v-card>
+                <div class="d-flex justify-end ma-1">
+                  <v-btn icon @click="copyContent()">
+                    <v-icon>
+                      mdi-clipboard-outline
+                    </v-icon>
+                  </v-btn>
+                </div>
+                <div class="pa-2">
+                  {{dialog.item}}
+                </div>
+              </v-card>
+            </v-dialog>
+        `,
+        data: function () {
+            return {}
+        },
+        computed: {
+            dialog: function (){
+                return this.$store.state.jsonViewer
+            }
+        },
+        methods:{
+            async copyContent(){
+                await navigator.clipboard.writeText(JSON.stringify(this.dialog.item))
+            }
+        }
     }
 )

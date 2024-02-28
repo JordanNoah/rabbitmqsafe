@@ -12,9 +12,9 @@ const dashboard = {
             </v-row>
           </v-container>
           <v-card outlined>
-            <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="itemsLength" :loading="loadingTable">
+            <v-data-table :headers="headers" :items="items" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :options.sync="options" :server-items-length="itemsLength" :loading="loadingTable">
               <template v-slot:item.content="{item}">
-                <span style="margin: 10px 0; display: -webkit-box; max-width: 250px; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                <span style="margin: 10px 0; display: -webkit-box; max-width: 250px; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;" @click="openJsonEvent(item)">
                   {{item.content}}
                 </span>
               </template>
@@ -28,6 +28,7 @@ const dashboard = {
             </v-data-table>
           </v-card>
           <config-rabbit></config-rabbit>
+          <dialog-json-viewer></dialog-json-viewer>
         </v-container>
     `,
     data: function () {
@@ -36,7 +37,7 @@ const dashboard = {
                 {
                     text: 'Id',
                     align: 'start',
-                    sortable: false,
+                    sortable: true,
                     value:'id'
                 },
                 {
@@ -64,7 +65,9 @@ const dashboard = {
                     value:'action'
                 },
             ],
-            loadingTable:false
+            loadingTable:false,
+            sortBy:'id',
+            sortDesc:true
         }
     },
     mounted:function (){
@@ -91,6 +94,7 @@ const dashboard = {
                 return this.$store.state.optionsDatatable
             },
             set(newValue){
+                console.log(newValue)
                 this.$store.state.optionsDatatable = newValue
             }
         },
@@ -102,6 +106,9 @@ const dashboard = {
         },
         appliedFilters: function () {
             return this.$store.state.appliedFilters
+        },
+        ioSocket: function () {
+            return this.$store.state.io
         }
     },
     methods:{
@@ -109,7 +116,8 @@ const dashboard = {
             this.loadingTable = true
             const objPage = {
                 page: (this.options.page - 1),
-                limit: this.options.itemsPerPage
+                limit: this.options.itemsPerPage,
+                order: {row:this.options.sortBy[0],desc:this.options.sortDesc[0]}
             }
 
             if(this.appliedFilters.length === 0){
@@ -162,6 +170,9 @@ const dashboard = {
             }).catch((err) => {
                 console.log(err)
             })
+        },
+        openJsonEvent(item) {
+            this.$store.commit('openJsonViewer',item)
         }
     }
 }

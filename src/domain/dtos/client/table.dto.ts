@@ -1,13 +1,15 @@
 export class TableDto {
     private constructor(
         public page: number,
-        public limit: number
+        public limit: number,
+        public order: {row: string,desc: boolean}
     ) {}
 
     static create(object:{[key:string]:any}):[string?,TableDto?]{
         const {
             page,
-            limit
+            limit,
+            order
         } = object
 
         if (page === undefined) return ['Missing page']
@@ -16,7 +18,7 @@ export class TableDto {
         return [
             undefined,
             new TableDto(
-                page,limit
+                page,limit,order
             )
         ]
     }

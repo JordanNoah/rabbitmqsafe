@@ -6,6 +6,7 @@ import {throws} from "node:assert";
 import {CustomError} from "../../domain/errors/custom.error";
 import {EventDatasourceImpl} from "../datasource/event.datasource.impl";
 import {EventRepositoryImpl} from "../repositories/event.repository.impl";
+import {SocketManager} from "../socket/io";
 
 export class Rabbitmq {
 
@@ -34,7 +35,7 @@ export class Rabbitmq {
             AppConfig.RABBIT_EXCHANGE,
             AppConfig.RABBIT_ROUTING_KEY
         )
-        await this._channel.prefetch(200);
+        await this._channel.prefetch(1);
     }
 
     public static async consume(){
@@ -42,6 +43,7 @@ export class Rabbitmq {
             AppConfig.RABBIT_QUEUE,
             async (msg) => {
                 try {
+                    SocketManager.emit('isSyncRabbit',{sync:true})
 
                     const datasource = new EventDatasourceImpl()
                     const eventRepository = new EventRepositoryImpl(datasource)
@@ -54,6 +56,8 @@ export class Rabbitmq {
                     }).catch((error) => {
                         console.log(error)
                         console.log("Event ignored")
+                    }).finally(()=>{
+                        SocketManager.emit('isSyncRabbit',{sync:false})
                     })
                 }catch (error){
                     if (error instanceof CustomError){
