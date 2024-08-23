@@ -8,21 +8,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="@mdi/font" level="application" />
-    <orderEntry type="library" name="vuetify" level="application" />
-    <orderEntry type="library" name="vuex" level="application" />
-    <orderEntry type="library" name="socket.io" level="application" />
-    <orderEntry type="library" name="crypto-js" level="application" />
-    <orderEntry type="library" name="vue" level="application" />
-    <orderEntry type="library" name="axios" level="application" />
-    <orderEntry type="library" name="vue-router" level="application" />
-    <orderEntry type="library" name="@mdi/font" level="application" />
-    <orderEntry type="library" name="vuetify" level="application" />
-    <orderEntry type="library" name="crypto-js" level="application" />
-    <orderEntry type="library" name="axios" level="application" />
-    <orderEntry type="library" name="vue" level="application" />
-    <orderEntry type="library" name="vuex" level="application" />
-    <orderEntry type="library" name="vue-router" level="application" />
-    <orderEntry type="library" name="vue-json-viewer" level="application" />
   </component>
 </module>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{@mdi/font, axios, crypto-js, socket.io, vue, vue-json-viewer, vue-router, vuetify, vuex}" />
-  </component>
-</project>
